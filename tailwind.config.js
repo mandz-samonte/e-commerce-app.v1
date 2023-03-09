@@ -11,6 +11,11 @@ module.exports = {
             "2xl": "1536px",
         },
         colors: ({ colors }) => ({
+            "primary-yellow": "#fdc500",
+            "secondary-yellow": "#ffd500",
+            "primary-blue": "#003f88",
+            "secondary-blue": "#00509d",
+
             inherit: colors.inherit,
             current: colors.current,
             transparent: colors.transparent,
