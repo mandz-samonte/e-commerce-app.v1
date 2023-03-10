@@ -7,15 +7,6 @@ import CatalogContainer from "./pages/catalog";
 import Main from "./pages/main";
 
 function App() {
-    const [product, setProduct] = useState({});
-
-    useEffect(() => {
-        axios.get("https://fakestoreapi.com/products/1").then(({ data }) => {
-            console.log(data);
-            setProduct(data);
-        });
-    }, []);
-
     return (
         <Router>
             <div className="min-h-screen bg-gray-100">

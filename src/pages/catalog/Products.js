@@ -1,10 +1,10 @@
 import ProductCard from "../../components/ProductCard";
 
-const Products = (props) => {
+const Products = ({ products }) => {
     return (
-        <div className="flex flex-wrap p-5">
-            {props.products?.map((product) => (
-                <ProductCard key={product.id} {...product} className="w-1/4" />
+        <div className="grid grid-cols-4 gap-x-5 gap-y-10">
+            {products?.map((product) => (
+                <ProductCard key={product.id} {...product} className="" />
             ))}
         </div>
     );
