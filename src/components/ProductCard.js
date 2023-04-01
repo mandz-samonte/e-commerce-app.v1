@@ -2,8 +2,16 @@ import { AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
 import { BsCart2 } from "react-icons/bs";
 import ReactStars from "react-rating-stars-component";
 import classNames from "classnames";
+import { useCart } from "../providers/CartProvider";
 
-const ProductCard = ({ title, description, rating = {}, image, price, className }) => {
+const ProductCard = ({ product, className }) => {
+    const { title, description, rating = {}, image, price } = product;
+    const { addToCart } = useCart();
+
+    const onAddToCart = () => {
+        addToCart(product);
+    };
+
     return (
         <div
             className={classNames(
@@ -25,7 +33,10 @@ const ProductCard = ({ title, description, rating = {}, image, price, className 
                     </span>
 
                     <div className="flex items-center gap-x-2 mt-auto">
-                        <button className="rounded-full w-10 h-10 flex items-center justify-center bg-primary-yellow transition-all duration-300">
+                        <button
+                            onClick={onAddToCart}
+                            className="rounded-full w-10 h-10 flex items-center justify-center bg-primary-yellow transition-all duration-300"
+                        >
                             <BsCart2 />
                         </button>
                         <button className="bg-white rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300">

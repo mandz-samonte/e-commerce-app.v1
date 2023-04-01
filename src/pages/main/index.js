@@ -25,9 +25,9 @@ const Categories = (props) => {
 
 const Products = (props) => {
     return (
-        <div className="flex flex-wrap">
+        <div className="grid grid-cols-4 gap-x-5 gap-y-10">
             {props.products?.map((product, key) => (
-                <ProductCard key={key} {...product} className="w-1/5" />
+                <ProductCard key={key} product={product} className="" />
             ))}
         </div>
     );
