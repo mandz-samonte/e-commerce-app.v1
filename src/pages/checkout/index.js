@@ -8,73 +8,7 @@ import { map } from "lodash";
 import { Link } from "react-router-dom";
 import Accordion from "../../components/Accordion";
 
-function NumberInput({ onChange = () => {}, onAdd, onMinus, value, className }) {
-    const [initialValue, setValue] = useState(value || 0);
-
-    const add = () => {
-        setValue(initialValue + 1);
-        onAdd(initialValue + 1);
-    };
-
-    const minus = () => {
-        if (initialValue > 1) {
-            setValue(initialValue - 1);
-            onMinus(initialValue - 1);
-        }
-    };
-
-    return (
-        <div className={classNames("flex rounded-lg border border-zinc-200 text-sm w-fit", className)}>
-            <button onClick={minus} className="flex items-center justify-center w-7 h-7">
-                <AiOutlineMinus />
-            </button>
-            <input
-                type="number"
-                placeholder="0"
-                value={initialValue}
-                className="w-7 h-7 text-center outline-none remove-input-spinner"
-            />
-            <button onClick={add} className="flex items-center justify-center w-7 h-7">
-                <AiOutlinePlus />
-            </button>
-        </div>
-    );
-}
-
-function ProductCheckout({ product }) {
-    const { removeFromCart, addQuantity, minusQuantity } = useCart();
-    const { title, price, image, quantity } = product;
-
-    return (
-        <div className="p-5 w-full flex items-start gap-x-5">
-            <img src={image} className="w-28 h-28 rounded-lg bg-zinc-400 flex-shrink-0" />
-
-            <div className="flex flex-col pt-1 w-full">
-                <span className="text-lg font-semibold">{title}</span>
-                <span className="text-sm text-zinc-400">sm</span>
-
-                <NumberInput
-                    onAdd={() => addQuantity(product)}
-                    onMinus={() => minusQuantity(product)}
-                    value={quantity}
-                    className="mt-5"
-                />
-            </div>
-
-            <div className="flex flex-col pt-1 text-right">
-                <span className="text-lg font-semibold">${price * quantity}</span>
-
-                <button
-                    onClick={() => removeFromCart(product)}
-                    className="flex items-center text-sm text-zinc-400 gap-x-2 mt-2 hover:text-red-500 transition-all"
-                >
-                    <BiTrash />
-                    Remove
-                </button>
-            </div>
-        </div>
-    );
-}
+import ProductRow from "./ProductRow";
 
 const EmptyState = () => {
     return (
@@ -86,6 +20,20 @@ const EmptyState = () => {
                 </Link>
             </span>
         </div>
+    );
+};
+
+const RadioButton = ({ children, className, inputClassName, ...props }) => {
+    return (
+        <label
+            className={classNames(
+                "flex items-center gap-x-3 text-sm px-4 py-3 border border-zinc-200 rounded cursor-pointer mb-2",
+                className
+            )}
+        >
+            <input type="radio" className={inputClassName} {...props} />
+            {children}
+        </label>
     );
 };
 
@@ -106,23 +54,18 @@ export default function Checkout() {
                             Remove All
                         </button>
                     </div>
-                    {cart.length ? (
-                        map(cart, (item) => <ProductCheckout key={item.id} product={item} />)
-                    ) : (
-                        <EmptyState />
-                    )}
+                    {cart.length ? map(cart, (item) => <ProductRow key={item.id} product={item} />) : <EmptyState />}
                 </div>
 
-                <div className="flex flex-col h-full flex-shrink-0 w-96 overflow-y-auto pb-5">
+                <div className="flex flex-col h-full flex-shrink-0 w-96 overflow-y-auto pb-5 hide-scrollbar">
                     <Accordion title="Shipping Address" titleClassName="p-5">
                         <div className="flex flex-col p-5 pt-0">
-                            <label className="flex items-center gap-x-3 text-sm px-4 py-3 border border-zinc-200 rounded cursor-pointer mb-2">
-                                <input type="radio" name="shipping-address" />
+                            <RadioButton name="shipping-address">
                                 <div className="flex flex-col relative w-full">
                                     <span className="font-medium">Home</span>
                                     <span className="text-xs text-zinc-400">Blk 0 Lot 0, Cavite City, Philippines</span>
                                 </div>
-                            </label>
+                            </RadioButton>
                             <button className="px-5 py-3 rounded-lg border border-zinc-200 text-sm flex items-center justify-center gap-x-2">
                                 <BsHouseAdd />
                                 Add Address
@@ -134,18 +77,9 @@ export default function Checkout() {
 
                     <Accordion title="Payment Method" titleClassName="p-5">
                         <div className="grid grid-cols-2 gap-2 p-5 pt-0">
-                            <label className="flex items-center gap-x-2 text-sm px-4 py-3 border border-zinc-200 rounded cursor-pointer">
-                                <input type="radio" name="payment" />
-                                <span>Bank Payment</span>
-                            </label>
-                            <label className="flex items-center gap-x-2 text-sm px-4 py-3 border border-zinc-200 rounded cursor-pointer">
-                                <input type="radio" name="payment" />
-                                <span>Online Wallet</span>
-                            </label>
-                            <label className="flex items-center gap-x-2 text-sm px-4 py-3 border border-zinc-200 rounded cursor-pointer">
-                                <input type="radio" name="payment" />
-                                <span className="whitespace-nowrap">Cash on Delivery</span>
-                            </label>
+                            <RadioButton name="payment">Bank Payment</RadioButton>
+                            <RadioButton name="payment">Online Wallet</RadioButton>
+                            <RadioButton name="payment">Cash on Delivery</RadioButton>
                         </div>
                     </Accordion>
 
@@ -153,48 +87,42 @@ export default function Checkout() {
 
                     <Accordion title="Shipping Method" titleClassName="p-5">
                         <div className="flex flex-col p-5 pt-0">
-                            <label className="flex items-center gap-x-3 text-sm px-4 py-3 border border-zinc-200 rounded cursor-pointer mb-2">
-                                <input
-                                    onChange={() => setShipping(FREE_SHIPPING)}
-                                    value={FREE_SHIPPING}
-                                    checked={shipping === FREE_SHIPPING}
-                                    type="radio"
-                                    name="shipping"
-                                />
+                            <RadioButton
+                                onChange={() => setShipping(FREE_SHIPPING)}
+                                value={FREE_SHIPPING}
+                                checked={shipping === FREE_SHIPPING}
+                                name="shipping"
+                            >
                                 <div className="flex flex-col relative w-full">
                                     <span className="font-medium">Free Shipping</span>
                                     <span className="text-xs text-zinc-400">7-30 business days</span>
                                     <span className="absolute top-0 right-0 font-semibold">$0</span>
                                 </div>
-                            </label>
-                            <label className="flex items-center gap-x-3 text-sm px-4 py-3 border border-zinc-200 rounded cursor-pointer mb-2">
-                                <input
-                                    onChange={() => setShipping(REGULAR_SHIPPING)}
-                                    value={REGULAR_SHIPPING}
-                                    checked={shipping === REGULAR_SHIPPING}
-                                    type="radio"
-                                    name="shipping"
-                                />
+                            </RadioButton>
+                            <RadioButton
+                                onChange={() => setShipping(REGULAR_SHIPPING)}
+                                value={REGULAR_SHIPPING}
+                                checked={shipping === REGULAR_SHIPPING}
+                                name="shipping"
+                            >
                                 <div className="flex flex-col relative w-full">
                                     <span className="font-medium">Regular Shipping</span>
                                     <span className="text-xs text-zinc-400">3-14 business days</span>
                                     <span className="absolute top-0 right-0 font-semibold">$7.50</span>
                                 </div>
-                            </label>
-                            <label className="flex items-center gap-x-3 text-sm px-4 py-3 border border-zinc-200 rounded cursor-pointer mb-2">
-                                <input
-                                    onChange={() => setShipping(FAST_SHIPPING)}
-                                    value={FAST_SHIPPING}
-                                    checked={shipping === FAST_SHIPPING}
-                                    type="radio"
-                                    name="shipping"
-                                />
+                            </RadioButton>
+                            <RadioButton
+                                onChange={() => setShipping(FAST_SHIPPING)}
+                                value={FAST_SHIPPING}
+                                checked={shipping === FAST_SHIPPING}
+                                name="shipping"
+                            >
                                 <div className="flex flex-col relative w-full">
                                     <span className="font-medium">Fast Shipping</span>
                                     <span className="text-xs text-zinc-400">1-3 business days</span>
                                     <span className="absolute top-0 right-0 font-semibold">$22.50 </span>
                                 </div>
-                            </label>
+                            </RadioButton>
                         </div>
                     </Accordion>
 
@@ -211,27 +139,24 @@ export default function Checkout() {
                             </div>
 
                             <div className="flex items-center overflow-x-auto gap-x-2 hide-scrollbar">
-                                <label className="flex min-w-fit items-center gap-x-3 text-sm px-4 py-3 border border-zinc-200 rounded-lg cursor-pointer mb-2">
-                                    <input type="radio" name="discount" />
+                                <RadioButton>
                                     <div className="flex flex-col relative w-full">
                                         <span className="font-medium">20%</span>
                                         <span className="text-xs text-zinc-400">Min of $200</span>
                                     </div>
-                                </label>
-                                <label className="flex min-w-fit items-center gap-x-3 text-sm px-4 py-3 border border-zinc-200 rounded-lg cursor-pointer mb-2">
-                                    <input type="radio" name="discount" />
+                                </RadioButton>
+                                <RadioButton>
                                     <div className="flex flex-col relative w-full">
                                         <span className="font-medium">$10</span>
                                         <span className="text-xs text-zinc-400">Min of $200</span>
                                     </div>
-                                </label>
-                                <label className="flex min-w-fit items-center gap-x-3 text-sm px-4 py-3 border border-zinc-200 rounded-lg cursor-pointer mb-2">
-                                    <input type="radio" name="discount" />
+                                </RadioButton>
+                                <RadioButton>
                                     <div className="flex flex-col relative w-full">
                                         <span className="font-medium">$10</span>
                                         <span className="text-xs text-zinc-400">Min of $200</span>
                                     </div>
-                                </label>
+                                </RadioButton>
                             </div>
                         </div>
                     </Accordion>
