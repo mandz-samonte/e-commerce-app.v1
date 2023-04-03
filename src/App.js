@@ -7,6 +7,10 @@ import CatalogContainer from "./pages/catalog";
 import Main from "./pages/main";
 import CartProvider from "./providers/CartProvider";
 import Checkout from "./pages/checkout";
+import Register from "./pages/auth/Register";
+import Login from "./pages/auth/Login";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import Onboarding from "./pages/onboarding";
 
 function App() {
     return (
@@ -18,6 +22,10 @@ function App() {
                         <Route exact path="/" element={<Main />} />
                         <Route exact path="/catalog" element={<CatalogContainer />} />
                         <Route exact path="/checkout" element={<Checkout />} />
+                        <Route exact path="/register" element={<Register />} />
+                        <Route exact path="/login" element={<Login />} />
+                        <Route exact path="/forgot-password" element={<ForgotPassword />} />
+                        <Route exact path="/onboarding" element={<Onboarding />} />
                     </Routes>
                 </div>
             </Router>

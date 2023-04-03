@@ -28,9 +28,13 @@ const Navbar = () => {
                         <BsCart2 />
                     </Link>
                 </Badge>
-                <span className="px-3 py-2 text-sm">Login</span>
+                <Link to="/login" className="px-3 py-2 text-sm">
+                    Login
+                </Link>
                 <div className="h-7 w-px bg-gray-200 mx-2"></div>
-                <span className="px-3 py-2 text-sm">Create Account</span>
+                <Link to="/register" className="px-3 py-2 text-sm">
+                    Sign Up
+                </Link>
             </div>
         </div>
     );
