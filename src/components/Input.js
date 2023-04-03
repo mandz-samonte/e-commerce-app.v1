@@ -35,7 +35,12 @@ export default function Input({
     if (type === "password")
         return (
             <InputWrapper id={htmlId} className={className} label={label} error={error} labelClassName={labelClassName}>
-                <div className="flex items-center bg-gray-100 rounded-lg border border-gray-300 outline-none px-5 pr-2">
+                <div
+                    className={classNames(
+                        "flex items-center bg-gray-100 rounded-lg border border-gray-300 outline-none px-5 pr-2",
+                        { "border border-red-500": error }
+                    )}
+                >
                     {prefixComponent}
                     <input
                         id={htmlId}
@@ -57,7 +62,11 @@ export default function Input({
     if (prefixComponent || suffixComponent)
         return (
             <InputWrapper id={htmlId} className={className} label={label} error={error} labelClassName={labelClassName}>
-                <div className="flex items-center bg-gray-100 rounded-lg w-[500px] ml-auto px-5">
+                <div
+                    className={classNames("flex items-center bg-gray-100 rounded-lg w-[500px] ml-auto px-5", {
+                        "border border-red-500": error,
+                    })}
+                >
                     {prefixComponent}
                     <input
                         id={htmlId}
